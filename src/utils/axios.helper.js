@@ -36,15 +36,15 @@ axiosInstance.interceptors.response.use(
         ) {
             originalRequest._retry = true;
             try {
-                const { data } = await axios.post(
-                    "/api/v1/users/refresh-token",
+                const { data } = await axiosInstance.post(
+                    "/users/refresh-token", // Relative to baseURL
                     {},
                     { withCredentials: true }
                 );
                 localStorage.setItem("accessToken", data.data.accessToken);
                 axiosInstance.defaults.headers.common[
                     "Authorization"
-                ] = `Bearer ${data.accessToken}`;
+                ] = `Bearer ${data.data.accessToken}`; // Fixed typo: data.accessToken -> data.data.accessToken
                 return axiosInstance(originalRequest);
             } catch (err) {
                 console.error("Failed to refresh token", err);
